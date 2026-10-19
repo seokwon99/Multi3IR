@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="description"
+    content="Multi³IR: A Benchmark for Multi-perspective Multi-domain Multi-modal Information Retrieval." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Multi³IR</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%8D%3C/text%3E%3C/svg%3E" />
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet" />
+  <link rel="stylesheet" href="static/css/bulma.min.css" />
+  <link rel="stylesheet" href="static/css/index.css" />
+  <script>window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]] }, svg: { fontCache: "global" } };</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --theme: #3b5bdb;
+      --theme-dark: #2f4ac0;
+      --theme-muted: #8a9de6;
+      --theme-soft: #eef2fd;
+      --theme-soft-strong: #e1e8fb;
+      --theme-border: #d0daf6;
+      --theme-focus: rgba(59, 91, 219, 0.32);
+      --section-tint: #fafafa;
+    }
+    html { scroll-behavior: smooth; }
+    a:not(.button) { color: var(--theme); }
+    a:not(.button):hover { color: var(--theme-dark); }
+    .publication-authors a { color: var(--theme) !important; }
+    .publication-links .button.is-dark {
+      border-color: transparent;
+      background-color: var(--theme-dark);
+    }
+    .publication-links .button.is-dark:hover { background-color: var(--theme); }
+    .publication-links .button.is-dark:focus-visible {
+      outline: 3px solid var(--theme-focus);
+      outline-offset: 3px;
+    }
+    .publication-links .icon svg { width: 1em; height: 1em; fill: currentColor; }
+    .section-tint,
+    .footer { background-color: var(--section-tint); }
+    .author-block { margin-right: 0.75rem; }
+    .author-list,
+    .affiliation-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .author-list { gap: 0.15rem 0.55rem; }
+    .affiliation-list { gap: 0.2rem 1rem; }
+    .author-list .author-block,
+    .affiliation-list .author-block { margin-right: 0; }
+    @media screen and (min-width: 769px) {
+      .author-list {
+        display: grid;
+        grid-template-columns: repeat(3, max-content);
+        gap: 0.15rem 0.8rem;
+        justify-content: center;
+      }
+    }
+    .section-nav {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      gap: 0.45rem;
+      margin: 0;
+      padding: 0.55rem 1rem;
+      overflow-x: auto;
+      border-bottom: 1px solid rgba(208, 218, 246, 0.92);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(10px);
+      scrollbar-width: none;
+    }
+    .section-nav::-webkit-scrollbar { display: none; }
+    .section-nav a {
+      flex: none;
+      padding: 0.35rem 0.8rem;
+      border: 1px solid var(--theme-border);
+      border-radius: 999px;
+      background: #fff;
+      color: var(--theme);
+      font-size: 0.82rem;
+      font-weight: 600;
+    }
+    .section-nav a:hover { border-color: var(--theme); background: var(--theme-soft); }
+    .section-nav a.is-active { border-color: var(--theme); background: var(--theme); color: #fff; }
+    .section-nav a:focus-visible { outline: 3px solid var(--theme-focus); outline-offset: 2px; }
+    section[id] { scroll-margin-top: 4.5rem; }
+    .sample-title { margin-bottom: 0.25rem; }
+    .stage-number {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 2rem; height: 2rem; border-radius: 999px;
+      background: var(--theme); color: #fff; font-weight: 700; margin-right: 0.6rem;
+    }
+    .pipeline-stage { margin-bottom: 1rem; }
+    #evaluation .overview-figure { max-width: none; }
+    .spin-columns .overview-figure { max-width: 780px; }
+    .fig-toggle { margin-top: 0.5rem; }
+    .fig-toggle summary {
+      display: flex; align-items: center; gap: 0.4rem; width: fit-content; cursor: pointer; list-style: none;
+      padding: 0.2rem 0.4rem; border-radius: 4px; font-weight: 600; color: #363636;
+    }
+    .fig-toggle summary::-webkit-details-marker { display: none; }
+    .fig-toggle summary::before {
+      content: ""; border-style: solid; border-width: 0.32em 0 0.32em 0.52em;
+      border-color: transparent transparent transparent currentColor; transition: transform 0.15s ease;
+    }
+    .fig-toggle[open] > summary::before { transform: rotate(90deg); }
+    .fig-toggle summary:hover { background: #f2f2f2; }
+    .fig-toggle summary:focus-visible { outline: 3px solid var(--theme-focus); outline-offset: 2px; }
+    .fig-toggle .overview-figure { margin: 0.4rem 0 0 1.3rem; }
+    .algo {
+      background: #fff; border: 1px solid #e6e6e6; border-radius: 6px;
+      padding: 1rem 1.2rem; font-size: 0.95rem; line-height: 1.7; overflow-x: auto;
+    }
+    .algo-title { border-bottom: 1px solid #363636; padding-bottom: 0.35rem; margin-bottom: 0.45rem; }
+    .algo-req { margin-bottom: 0.4rem; }
+    .algo-lines { list-style: none; counter-reset: ln; margin: 0; padding: 0.4rem 0 0; border-top: 1px solid #e6e6e6; }
+    .algo-lines li { counter-increment: ln; position: relative; padding-left: 1.8rem; margin: 0.15rem 0; white-space: nowrap; }
+    .algo-lines li::before { content: counter(ln) ":"; position: absolute; left: 0; width: 1.4rem; text-align: right; color: #888; font-size: 0.78rem; }
+    .algo-lines li.i1 { padding-left: 3rem; }
+    .algo-lines li.i2 { padding-left: 4.2rem; }
+    .algo .cmt { color: #888; margin-left: 0.3rem; }
+    .algo mjx-container { margin: 0 !important; }
+    .overview-figure {
+      max-width: 700px; margin: 1.75rem auto 0; text-align: center;
+      background: #fff; border: 1px solid #e6e6e6; border-radius: 6px; padding: 0.6rem 0.6rem 0.55rem;
+    }
+    .overview-figure img { display: block; width: 100%; height: auto; margin: 0 auto; }
+    .overview-figure figcaption {
+      font-size: 0.78rem; line-height: 1.5; color: #666; margin-top: 0.5rem; padding: 0.5rem 0.3rem 0;
+      border-top: 1px solid #eee;
+    }
+
+    .motivation-callout {
+      margin-top: 1.25rem;
+      padding: 1.35rem 1.5rem;
+      background: var(--theme-soft);
+      border: 1px solid var(--theme-border);
+      border-left: 4px solid var(--theme);
+      border-radius: 8px;
+      box-shadow: 0 3px 12px rgba(59, 91, 219, 0.08);
+      text-align: left;
+    }
+    .motivation-callout p { margin: 0; font-size: 1.05rem; line-height: 1.75; }
+    .motivation-callout strong { color: var(--theme-dark); }
+    .finding-callout { margin-top: 0.5rem; text-align: center; }
+
+    .table-scroll-hint {
+      display: none;
+      margin: 1rem 0 0.35rem;
+      color: #666;
+      font-size: 0.78rem;
+      text-align: center;
+    }
+    .performance-table-wrap {
+      margin-top: 1.5rem;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      padding-bottom: 0.25rem;
+      -webkit-overflow-scrolling: touch;
+    }
+    .performance-table-wrap:focus-visible { outline: 3px solid var(--theme-focus); outline-offset: 3px; }
+    .performance-table { min-width: 760px; table-layout: fixed; font-size: 0.9rem; }
+    .performance-table.is-narrow { min-width: 560px; }
+    .performance-table caption {
+      caption-side: bottom;
+      padding: 0.85rem 0.5rem 0;
+      color: #666;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      text-align: left;
+    }
+    .performance-table thead th,
+    .performance-table tbody th,
+    .performance-table tbody td {
+      padding: 0.55rem 0.65rem;
+      text-align: center !important;
+      vertical-align: middle;
+    }
+    .performance-table thead th { color: #363636; }
+    .performance-table .metric-group { border-bottom: 2px solid var(--theme); }
+    .performance-table .divider { border-left: 2px solid #cfd6df; }
+    .performance-table .scenario { width: 8rem; font-weight: 700; }
+    .performance-table .method { width: 9rem; text-align: left !important; }
+    .performance-table tr.section-break > * { border-top: 2px solid #cfd6df; }
+    .performance-table tr.oracle > * { color: #888; font-style: italic; }
+    .performance-table .duplexgen-column,
+    .performance-table tr.ours > * { background: var(--theme-soft); }
+    .performance-table tbody tr:hover > * { background: #f5f7fd; }
+    .performance-table tbody tr.ours:hover > * { background: var(--theme-soft-strong); }
+    .performance-table .ck { color: #2f855a; }
+    .performance-table .x { color: #c53030; }
+
+    .cmp-card {
+      background: #fff; border: 1px solid #e6e6e6; border-radius: 8px;
+      padding: 0.9rem; height: 100%; display: flex; flex-direction: column;
+    }
+    .persp-tag {
+      display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; margin-bottom: 0.3rem;
+      background: var(--theme); color: #fff; font-size: 0.72rem; font-weight: 700;
+    }
+    .sample-list, .sample-view { height: 680px; overflow-y: auto; overscroll-behavior: contain; }
+    .sample-list {
+      display: flex; flex-direction: column; gap: 0.4rem; padding: 0.5rem;
+      background: #fff; border: 1px solid #e6e6e6; border-radius: 8px;
+    }
+    .sample-item {
+      display: block; width: 100%; text-align: left; cursor: pointer;
+      padding: 0.55rem 0.7rem; border: 1px solid transparent; border-radius: 6px;
+      background: #fff; color: #363636; font: inherit; font-size: 0.85rem; line-height: 1.35;
+    }
+    .sample-item:hover { background: var(--theme-soft); }
+    .sample-item[aria-selected="true"] { background: var(--theme-soft); border-color: var(--theme); }
+    .sample-item:focus-visible { outline: 3px solid var(--theme-focus); outline-offset: 1px; }
+    .sample-item .meta { display: block; font-size: 0.7rem; color: #888; margin-bottom: 0.15rem; }
+    .sample-item .label { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .sample-view { display: block; padding: 1rem 1.1rem; }
+    .sample-view .meta { font-size: 0.75rem; color: #888; }
+    .sample-view .q { font-family: "Google Sans", sans-serif; font-size: 1.15rem; font-weight: 600; margin-top: 0.2rem; }
+    .sample-view .body { color: #4a4a4a; font-size: 0.9rem; margin-top: 0.3rem; }
+    .persp-block { margin-top: 1.1rem; padding-top: 0.9rem; border-top: 1px solid #eee; }
+    .persp-block .persp-head { font-size: 0.92rem; font-weight: 600; color: #363636; }
+    .doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 0.5rem; margin-top: 0.55rem; }
+    .doc-item { border: 1px solid #e6e6e6; border-radius: 6px; padding: 0.5rem 0.6rem; font-size: 0.78rem; line-height: 1.4; min-width: 0; }
+    .doc-item .who { display: block; font-size: 0.66rem; font-weight: 700; color: #6e6e6e; margin-bottom: 0.25rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .doc-item img { display: block; max-height: 120px; width: auto; max-width: 100%; margin: 0.1rem auto 0.3rem; }
+    .doc-item .cap { color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .lbl-text { color: #1976D2; }
+    .lbl-image { color: #D32F2F; }
+    @media screen and (max-width: 768px) {
+      .sample-list { height: 260px; }
+      .sample-view { height: auto; max-height: 720px; }
+    }
+
+    .bibtex-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .bibtex-heading .title { margin-bottom: 0; }
+    .copy-bibtex {
+      flex: none;
+      padding: 0.45rem 0.8rem;
+      border: 1px solid var(--theme-border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--theme);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .copy-bibtex:hover { background: var(--theme-soft); }
+    .copy-bibtex.is-copied { border-color: #3a9d67; background: #effaf4; color: #26734a; }
+    .copy-bibtex:focus-visible { outline: 3px solid var(--theme-focus); outline-offset: 2px; }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+    .back-to-top {
+      position: fixed;
+      right: max(1rem, env(safe-area-inset-right));
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      z-index: 50;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.55rem 0.75rem;
+      border: none;
+      border-radius: 999px;
+      background: var(--theme);
+      box-shadow: 0 5px 16px rgba(36, 56, 140, 0.25);
+      color: #fff;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(0.75rem);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+      visibility: hidden;
+    }
+    .back-to-top.is-visible { opacity: 1; pointer-events: auto; transform: translateY(0); visibility: visible; }
+    .back-to-top.is-visible:hover { background: var(--theme-dark); transform: translateY(-2px); }
+    .back-to-top:focus-visible { outline: 3px solid var(--theme-focus); outline-offset: 3px; }
+
+    @media screen and (max-width: 768px) {
+      .section-nav { justify-content: flex-start; }
+      .author-list { gap: 0.1rem 0.4rem; }
+      .affiliation-list { gap: 0.15rem 0.65rem; font-size: 0.85rem !important; line-height: 1.45; }
+      .motivation-callout { padding: 1.1rem 1.15rem; }
+      .table-scroll-hint { display: block; }
+      .performance-table-wrap { margin-top: 0; }
+      .has-text-justified { text-align: left !important; }
+      .bibtex-heading { align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .back-to-top { transition: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-widescreen">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-2 publication-title">Multi<sup>3</sup>IR: A Benchmark for Multi-perspective<br />Multi-domain Multi-modal Information Retrieval</h1>
+
+            <div class="is-size-5 publication-authors author-list" style="margin-top:1rem;">
+              <span class="author-block"><a href="https://seokwon99.github.io/" target="_blank" rel="noopener">Seokwon Song</a>,</span>
+              <span class="author-block"><a href="https://ohmyksh.github.io/" target="_blank" rel="noopener">Sohyeon Kim</a>,</span>
+              <span class="author-block"><a href="https://vision.snu.ac.kr/gunhee/" target="_blank" rel="noopener">Gunhee Kim</a></span>
+            </div>
+            <div class="is-size-6 publication-authors affiliation-list" style="margin-top:0.5rem;">
+              <span class="author-block">Seoul National University</span>
+            </div>
+            <div class="is-size-5 publication-authors" style="margin-top:0.35rem;">
+              <span class="author-block"><strong>EMNLP 2026</strong></span>
+            </div>
+
+            <!-- Resource buttons -->
+            <div class="column has-text-centered" style="margin-top:1.5rem;">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2608.30949" target="_blank" rel="noopener"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><svg viewBox="0 0 384 512" aria-hidden="true"><path d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z"/></svg></span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/seokwon99/Multi3IR" target="_blank" rel="noopener"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5z"/></svg></span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://huggingface.co/datasets/seokwon99/Multi3IR" target="_blank" rel="noopener"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">&#129303;</span>
+                    <span>Dataset</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="section-nav" aria-label="Page sections">
+    <a href="#framework">Framework</a>
+    <a href="#samples">Samples</a>
+    <a href="#evaluation">Evaluation</a>
+  </nav>
+
+  <!-- Abstract -->
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              Information retrieval increasingly targets open-ended queries that admit diverse
+              perspectives. Existing IR benchmarks focus on closed-ended queries, and even
+              open-ended ones mostly have supporting documents from a single subject domain and a
+              single modality. We introduce <strong>Multi³IR</strong>, a benchmark that evaluates
+              how well retrievers cover the multifaceted perspectives of open-ended queries across
+              diverse domains and modalities. It comprises 104.9K Stack Exchange queries, each
+              annotated with perspective descriptions that capture the query's implicit viewpoints,
+              over a 1.01M-document corpus of web text and web images with judged gold documents
+              per perspective. We also propose <strong>SPIN</strong> (Steering Perspectives by
+              Injecting Noise), a parameter- and label-efficient method that learns noise vectors
+              to steer a frozen retriever's embeddings toward diverse yet meaningful semantic
+              directions. Existing multimodal retrievers suffer from single-perspective bias; SPIN
+              substantially improves perspective coverage on Multi³IR and generalizes to unseen
+              open-ended IR benchmarks.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Motivation -->
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Motivation: Can Retrievers Find Every Perspective?</h2>
+          <div class="content motivation-callout">
+            <p>
+              Ask <em>“Why are so few foods blue?”</em> and there is no single answer.
+              <strong>Biology</strong> explains why blue pigments are rare,
+              <strong>psychology</strong> explains how people perceive blue food, and
+              <strong>chemistry</strong> explains why blueberries turn green when baked. The
+              evidence is spread across domains, in both text and images. Yet current retrievers
+              compress the query into one embedding and return documents for only the dominant
+              perspective. A useful retriever must find evidence for <em>every</em> perspective.
+            </p>
+          </div>
+          <figure class="overview-figure">
+            <a href="static/images/motivation.png" target="_blank" rel="noopener">
+              <img src="static/images/motivation.png"
+                   alt="The query 'Why are so few foods blue?' branches into three perspectives, each linked to supporting text and image documents from biology, psychology, social science and chemistry." />
+            </a>
+            <figcaption>An open-ended query has several implicit perspectives, each supported by documents from different domains and modalities.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Framework -->
+  <section class="section section-tint" id="framework">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered">Multi³IR Framework</h2>
+
+      <h3 class="title is-5" style="margin-top:1.5rem;">Benchmark Construction</h3>
+      <figure class="overview-figure" style="margin-top:0.75rem;">
+        <a href="static/images/pipeline.jpg" target="_blank" rel="noopener">
+          <img src="static/images/pipeline.jpg"
+               alt="Data construction pipeline: Step 1 post selection from Stack Exchange, Step 2 perspective extraction and verification, Step 3 document retrieval and verification." />
+        </a>
+        <figcaption>A Stack Exchange post goes in; perspectives with exclusively supporting text and image documents come out. Click to enlarge.</figcaption>
+      </figure>
+
+      <div class="content" style="margin-top:1.5rem;">
+        <div class="pipeline-stage">
+          <span class="stage-number">1</span><strong>Post Selection.</strong>
+          Open-ended questions and their community answers are collected from 77 Stack Exchange
+          sites in 5 categories.
+        </div>
+        <div class="pipeline-stage">
+          <span class="stage-number">2</span><strong>Perspective Extraction &amp; Verification.</strong>
+          GPT-5-mini turns the answers into perspective descriptions. Unfaithful perspectives
+          (Bespoke-MiniCheck-7B) and redundant ones (cosine &gt; 0.8) are removed.
+        </div>
+        <div class="pipeline-stage">
+          <span class="stage-number">3</span><strong>Document Retrieval &amp; Verification.</strong>
+          Text documents come from C4 (BM25 + dense rerank) and image documents from Google Image
+          Search. Qwen3-VL-30B-A3B keeps only documents that support their own perspective and no
+          sibling perspective.
+        </div>
+      </div>
+
+      <h3 class="title is-5" style="margin-top:2.5rem;">SPIN: Steering Perspectives by Injecting Noise</h3>
+      <div class="columns is-centered spin-columns" style="margin-top:0.75rem;">
+        <div class="column is-10">
+          <div class="algo" role="figure" aria-label="Algorithm 1: SPIN Optimization">
+            <p class="algo-title"><strong>Algorithm 1</strong> SPIN Optimization</p>
+            <p class="algo-req"><strong>Require:</strong> frozen encoder \(M\) with \(L\) layers, training set \(\mathcal{X}\), learnable noise vectors \(\mathcal{E}=\{\boldsymbol{\varepsilon}_1,\ldots,\boldsymbol{\varepsilon}_m\}\), injection layer \(l\), sigmoid temperature \(\tau\), bias \(b\)</p>
+            <ol class="algo-lines">
+              <li><strong>for</strong> batch \(\mathcal{B}=\{(q_n,\mathcal{P}_n)\}_{n=1}^{N}\subset\mathcal{X}\) <strong>do</strong></li>
+              <li class="i1"><strong>for</strong> \(n=1,\ldots,N\) <strong>do</strong></li>
+              <li class="i2">\(\mathbf{h}_l^n\leftarrow M_{0\rightarrow l}(q_n)\) <span class="cmt">▷ representation of \(q_n\) at layer \(l\)</span></li>
+              <li class="i2">\(\mathbf{S}_n\leftarrow\{M_{l\rightarrow L}(\mathbf{h}_l^n+\boldsymbol{\varepsilon})\mid\boldsymbol{\varepsilon}\in\mathcal{E}\}\) <span class="cmt">▷ steered embeddings</span></li>
+              <li class="i2">\(\mathbf{T}_n\leftarrow\{M(p)\mid p\in\mathcal{P}_n\}\) <span class="cmt">▷ target embeddings</span></li>
+              <li class="i1"><strong>end for</strong></li>
+              <li class="i1">\(p_{\mathbf{s}}(\mathbf{t})\leftarrow\sigma\big((\cos(\mathbf{s},\mathbf{t})-b)/\tau\big)\) <span class="cmt">▷ prob. that \(\mathbf{s}\) covers \(\mathbf{t}\)</span></li>
+              <li class="i1">\(\mathcal{L}_{\text{pos}}\leftarrow-\frac{1}{N}\sum_{n}\frac{1}{|\mathbf{T}_n|}\sum_{\mathbf{t}\in\mathbf{T}_n}\log\big(1-\prod_{\mathbf{s}\in\mathbf{S}_n}(1-p_{\mathbf{s}}(\mathbf{t}))\big)\)</li>
+              <li class="i1">\(\mathcal{L}_{\text{neg}}\leftarrow-\frac{1}{N}\sum_{n}\frac{1}{|\mathbf{T}_{\neq n}|}\sum_{\mathbf{t}\in\mathbf{T}_{\neq n}}\sum_{\mathbf{s}\in\mathbf{S}_n}\log\big(1-p_{\mathbf{s}}(\mathbf{t})\big)\) <span class="cmt">▷ in-batch negatives</span></li>
+              <li class="i1">Minimize \(\mathcal{L}=\mathcal{L}_{\text{pos}}+\mathcal{L}_{\text{neg}}\)</li>
+              <li><strong>end for</strong></li>
+            </ol>
+          </div>
+          <details class="fig-toggle">
+            <summary>Training illustration</summary>
+            <figure class="overview-figure">
+              <a href="static/images/spin_train.png" target="_blank" rel="noopener">
+              <img src="static/images/spin_train.png"
+                   alt="SPIN training: the query passes through frozen layers up to the middle layer, the hidden state is perturbed by learnable noises, and the frozen remaining layers produce steered embeddings matched against target embeddings of the perspective descriptions." />
+            </a>
+              <figcaption>Training: learnable noises injected at the middle layer branch one query into several steered embeddings, each matched against the perspective descriptions.</figcaption>
+            </figure>
+          </details>
+          <details class="fig-toggle">
+            <summary>Inference illustration</summary>
+            <figure class="overview-figure">
+              <a href="static/images/inference.png" target="_blank" rel="noopener">
+              <img src="static/images/inference.png"
+                   alt="SPIN inference: the learned noises are frozen and each steered embedding retrieves its own ranked list." />
+            </a>
+              <figcaption>Inference: the learned noises are frozen; each steered embedding retrieves its own ranked list, and the lists are merged by round robin.</figcaption>
+            </figure>
+          </details>
+        </div>
+      </div>
+
+      <div class="content" style="margin-top:1.5rem;">
+        <div class="pipeline-stage">
+          <span class="stage-number">1</span><strong>Split a Frozen Retriever.</strong>
+          The encoder is split at the middle layer (0.5<em>L</em>), where the hidden states still
+          hold several interpretations of the query.
+        </div>
+        <div class="pipeline-stage">
+          <span class="stage-number">2</span><strong>Inject Learnable Noise.</strong>
+          <em>m</em> = 5 noise vectors are added to the hidden states, and the remaining frozen
+          layers produce <em>m</em> steered embeddings. Only the noise table is trained
+          (20.5K parameters).
+        </div>
+        <div class="pipeline-stage">
+          <span class="stage-number">3</span><strong>Noisy-OR Coverage Loss.</strong>
+          Every perspective description must be covered by at least one steered embedding, and
+          no negative may be covered by any.
+        </div>
+        <div class="pipeline-stage">
+          <span class="stage-number">4</span><strong>Round-Robin Retrieval.</strong>
+          At inference the <em>m</em> rankings are merged by round robin, so the final list
+          covers several perspectives instead of repeating the dominant one.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Samples -->
+  <section class="section" id="samples">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered">Multi³IR Samples</h2>
+      <div class="columns" style="margin-top:1rem;">
+        <div class="column is-4">
+          <div class="sample-list" id="sample-list" role="tablist" aria-label="Test queries"></div>
+        </div>
+        <div class="column is-8">
+          <div class="cmp-card sample-view" id="sample-view" role="tabpanel" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evaluation -->
+  <section class="section section-tint" id="evaluation">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered">Perspective Coverage Evaluation</h2>
+
+      <h3 class="title is-5" style="margin-top:1.5rem;">Preliminary: Single-Perspective Bias</h3>
+      <div class="columns is-vcentered">
+        <div class="column is-5">
+          <figure class="overview-figure" style="margin-top:0;">
+            <a href="static/images/bias.png" target="_blank" rel="noopener">
+              <img src="static/images/bias.png"
+                   alt="Hit@20 by perspective rank for Qwen3-VL, GME-Qwen2 and MM-Embed. With the original query, Hit@20 drops from about 0.6 to near zero by the third perspective; with oracle perspective queries it stays high for all four." />
+            </a>
+            <figcaption>
+              Hit@20 per perspective, ranked. (a) Retrieval with the original query.
+              (b) Retrieval with the gold perspective descriptions, merged by round robin.
+            </figcaption>
+          </figure>
+        </div>
+        <div class="column is-7">
+          <div class="content has-text-justified">
+            <p>
+              <strong>Do retrievers cover all perspectives?</strong> No. With the original query,
+              only the dominant perspective is covered; Hit@20 falls close to zero by the third
+              perspective for all three retrievers.
+            </p>
+            <p>
+              <strong>Why do they miss the others?</strong> Querying with the gold perspective
+              descriptions recovers them, so the document embeddings are already well separated.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="content motivation-callout finding-callout">
+        <p><strong>Finding:</strong> The bottleneck is on the <strong>query side</strong>. One query
+          embedding fails to capture the multiple meanings of an open-ended query.</p>
+      </div>
+
+      <h3 class="title is-5" style="margin-top:2rem;">Main Results</h3>
+      <p id="performance-scroll-hint" class="table-scroll-hint">Scroll horizontally to view all columns.</p>
+      <div class="performance-table-wrap" role="region" aria-label="Perspective coverage results"
+           aria-describedby="performance-scroll-hint" tabindex="0">
+        <table class="table is-fullwidth performance-table">
+          <caption>
+            Perspective coverage (%) on the Multi³IR-Bench test split (1.0K queries, 4.8K
+            perspectives, 1.01M candidates). <strong>HC@k</strong> counts a perspective as covered
+            when one of its gold documents is in the top-k; <strong>SC@k</strong> uses a
+            GPT-5-mini support judge (&kappa; = 0.84 against humans). <em>m</em> is the number of
+            query embeddings; FT-Doc / FT-Persp mark document- or perspective-level supervision.
+            The best non-oracle result per retriever is shown in <strong>bold</strong>; Oracle
+            uses the gold perspective descriptions as queries.
+          </caption>
+          <thead>
+            <tr>
+              <th class="scenario" scope="col" rowspan="2">Retriever</th>
+              <th class="method" scope="col" rowspan="2">Method</th>
+              <th scope="col" rowspan="2"><em>m</em></th>
+              <th class="metric-group" scope="colgroup" colspan="2">Supervision</th>
+              <th class="metric-group divider" scope="colgroup" colspan="2">Hard Coverage</th>
+              <th class="metric-group divider" scope="colgroup" colspan="2">Soft Coverage</th>
+            </tr>
+            <tr>
+              <th scope="col">FT-Doc</th><th scope="col">FT-Persp</th>
+              <th class="divider" scope="col">HC@10</th><th scope="col">HC@100</th>
+              <th class="divider" scope="col">SC@10</th><th scope="col">SC@20</th>
+            </tr>
+          </thead>
+          <tbody id="main-table"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="section">
+    <div class="container is-max-widescreen">
+      <h2 class="title is-3 has-text-centered">Key Findings</h2>
+      <div class="content has-text-justified">
+        <p>
+          <strong>Current retrievers have single-perspective bias.</strong> With the original
+          query, multimodal retrievers cover only the dominant perspective; Hit@20 falls close to
+          zero by the third perspective.
+        </p>
+        <p>
+          <strong>The bottleneck is the query embedding.</strong> Querying with the gold
+          perspective descriptions recovers the missed documents, so the document embeddings are
+          already well separated.
+        </p>
+        <p>
+          <strong>SPIN improves coverage with few parameters and cheap labels.</strong> With 20.5K
+          trainable parameters and perspective-level supervision only, SPIN outperforms
+          LLM-Expansion and ARE on all three retrievers, and the middle injection layer matters
+          most.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-widescreen content">
+      <div class="bibtex-heading">
+        <h2 class="title is-3">BibTeX</h2>
+        <button id="copy-bibtex" class="copy-bibtex" type="button"
+                aria-describedby="bibtex-copy-status">Copy BibTeX</button>
+      </div>
+      <p id="bibtex-copy-status" class="visually-hidden" aria-live="polite"></p>
+      <pre><code id="bibtex-code">@article{song2026multi3ir,
+  title={MULTI3IR: A Benchmark for Multi-perspective Multi-domain Multi-modal Information Retrieval},
+  author={Song, Seokwon and Kim, Sohyeon and Kim, Gunhee},
+  journal={arXiv preprint arXiv:2608.30949},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8 has-text-centered">
+          <div class="content">
+            <p>
+              <a href="https://arxiv.org/abs/2608.30949" target="_blank" rel="noopener">Paper</a> &middot;
+              <a href="https://github.com/seokwon99/Multi3IR" target="_blank" rel="noopener">Code</a> &middot;
+              <a href="https://huggingface.co/datasets/seokwon99/Multi3IR" target="_blank" rel="noopener">Dataset</a>
+            </p>
+            <p>
+              Page template adapted from the
+              <a href="https://github.com/eliahuhorwitz/Academic-project-page-template"
+                 target="_blank" rel="noopener">Academic Project Page Template</a>
+              (Nerfies). Licensed under
+              <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank"
+                 rel="license noopener">CC BY-SA 4.0</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button id="back-to-top" class="back-to-top" type="button" aria-label="Back to top">
+    <span aria-hidden="true">&uarr;</span>
+    <span>Top</span>
+  </button>
+
+  <script>
+    var SAMPLES = [{"site": "biology.stackexchange.com", "cat": "Science", "query": "What can you tell about a person, having only their whole genome as information? Well, the question is in the title, no explanation need.", "persp": [{"text": "Can a whole-genome sequence reveal an individual’s biological sex (XX vs XY)?", "docs": [{"kind": "image", "domain": "hudsonalpha.org", "url": "https://www.hudsonalpha.org/sex-determination-the-x-y-zs-of-sex-chromosomes/", "img": "serper_12bc3988650c", "title": "Sex determination: The X, Y, Z's of sex chromosomes ...", "field": "Genetics"}, {"kind": "image", "domain": "phys.org", "url": "https://phys.org/news/2023-08-scientists-sequence-human-chromosome.html", "img": "serper_5ac859c72e00", "title": "Scientists release the first complete sequence of a human Y ...", "field": "Genetics"}]}, {"text": "What visible physical traits (e.g., skin, eye, hair color) can be predicted from a whole-genome sequence?", "docs": [{"kind": "text", "domain": "scholarworks.iupui.edu", "url": "https://scholarworks.iupui.edu/handle/1805/8403", "body": "Without a match in the DNA database or a reference profile, current methods in forensic DNA profiling fail to give any leads to further criminal investigations. Forensic DNA Phenotyping bridges that gap in the investigation by providing…", "field": "Forensics"}, {"kind": "image", "domain": "nature.com", "url": "https://www.nature.com/articles/ng.2007.13", "img": "serper_638537856ff9", "title": "Genetic determinants of hair, eye and skin pigmentation in ...", "field": "Genetics"}, {"kind": "image", "domain": "wustllawreview.org", "url": "https://wustllawreview.org/2024/04/18/estimating-a-face-what-predicting-appearance-from-dna-reveals-about-the-need-to-regulate-genetic-investigations/", "img": "serper_eca4a39ed270", "title": "Estimating a Face: What Predicting Appearance from DNA ...", "field": "Forensics"}]}, {"text": "Can a male’s Y-chromosome data be used to infer his surname and thereby identify him?", "docs": [{"kind": "text", "domain": "wi.mit.edu", "url": "http://wi.mit.edu/news/archive/2013/scientists-expose-new-vulnerabilities-security-personal-genetic-information", "body": "CAMBRIDGE, Mass. – Using only a computer, an Internet connection, and publicly accessible online resources, a team of Whitehead Institute researchers has been able to identify nearly 50 individuals who had submitted personal genetic…", "field": "Law & Ethics"}]}, {"text": "What epigenetic information (e.g., DNA methylation) could be obtained alongside a genome and what additional traits or exposures might that reveal?", "docs": [{"kind": "image", "domain": "frontiersin.org", "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2020.613636/full", "img": "serper_9c388141724c", "title": "Frontiers | Impacts of Epigenetic Processes on the Health ...", "field": "Genetics"}]}, {"text": "Can telomere length measurements from sequencing data give an estimate of an individual’s age?", "docs": [{"kind": "image", "domain": "frontiersin.org", "url": "https://www.frontiersin.org/journals/genetics/articles/10.3389/fgene.2020.630186/full", "img": "serper_966e526fcb89", "title": "Frontiers | Telomere Length as a Marker of Biological Age ...", "field": "Medicine"}, {"kind": "image", "domain": "aging-us.com", "url": "https://www.aging-us.com/article/202498/text", "img": "serper_7d71fafa6a0f", "title": "Telomere length as a function of age at population level ...", "field": "Medicine"}]}]}, {"site": "biology.stackexchange.com", "cat": "Science", "query": "Besides fruits and milk, what other things in nature are \"intended\" to be eaten? Besides fruits and milk, what other examples are there in nature where it is beneficial for a species to have some part of its biomass eaten by others so that it evolved to produce nutritious parts to be eaten by other organisms? For example, plants having animals eat their fruits as a means of transporting their seeds. Update. I think there are at least two philosophically different scenarios that interest me. One is when the substance is intended to be eaten by the same species (example: milk). The other is when it is intended to be eaten by another species (example: fruits).", "persp": [{"text": "Do fruits evolve to be eaten by animals as a mechanism for seed dispersal?", "docs": [{"kind": "text", "domain": "pfaf.org", "url": "https://pfaf.org/user/cmspage.aspx?pageid=42", "body": "Many plants produce fruits in order to help in the dispersal of their seeds. It would be pointless for a plant to drop all its seeds directly beneath, by its roots, since all the seedlings would then compete with each other and their…", "field": "Botany"}, {"kind": "image", "domain": "maggiesscienceconnection.weebly.com", "url": "https://maggiesscienceconnection.weebly.com/seed-dispersal.html", "img": "serper_54d97766737d", "title": "Seed Dispersal - Maggie's Science Connection", "field": "Ecology"}, {"kind": "image", "domain": "scienceshifu.com", "url": "https://scienceshifu.com/reproduction-in-plants-seed-dispersal-methods/", "img": "serper_88a7d870c6bb", "title": "Reproduction in Plants- Seed Dispersal Methods and Diagrams", "field": "Botany"}]}, {"text": "Is honeydew produced by aphids to be eaten by ants, forming a mutualism that benefits the aphids?", "docs": [{"kind": "text", "domain": "thoughtco.com", "url": "https://www.thoughtco.com/aphid-herding-ants-1968237", "body": "Ants and aphids have a mutualistic relationship. The ants feed on honeydew left behind by the aphids, and in return, they protect the aphids from predators. Ants and aphids share a well-documented symbiotic relationship, which means they…", "field": "Zoology"}, {"kind": "text", "domain": "realselfsufficiency.com", "url": "https://realselfsufficiency.com/ants-farming-aphids/", "body": "Ants farm aphids. They care for them, offer protection, and literally “farm” them – much like humans farm their livestock. Picture ants wearing the frayed straw hat, dirty blue dungarees or coveralls, and the good ol’ fashioned wellies.…", "field": "Botany"}, {"kind": "image", "domain": "rcannon992.com", "url": "https://rcannon992.com/2017/05/11/ant-attended-aphids/", "img": "serper_f1f77d9106ec", "title": "Ant-attended aphids – Ray Cannon's nature notes", "field": "Zoology"}]}, {"text": "Do honeypot ants store food (a honey-like substance) as part of their biomass specifically to be consumed by nestmates?", "docs": [{"kind": "text", "domain": "karlangu.com", "url": "https://karlangu.com/stories/6-honey-ants-also-known-as-honey-pot-ants", "body": "Many insects, notably honey bees and some wasps, collect and store liquid for use at a later date. However, these insects store their food within their nest or in combs. Honey ants are unique in using their own bodies as living storage, but…", "field": "Zoology"}, {"kind": "image", "domain": "kqed.org", "url": "https://www.kqed.org/science/1978892/honeypot-ants-turn-their-biggest-sisters-into-jugs-of-nectar", "img": "serper_774f69f67b56", "title": "Honeypot Ants Turn Their Biggest Sisters into Jugs of Nectar ...", "field": "Zoology"}, {"kind": "image", "domain": "en.wikipedia.org", "url": "https://en.wikipedia.org/wiki/Honeypot_ant", "img": "serper_02228e3ebaad", "title": "Honeypot ant - Wikipedia", "field": "Zoology"}]}, {"text": "Have parental provisioning behaviors (milk, regurgitation) evolved to provide nutrients to offspring of the same species?", "docs": [{"kind": "text", "domain": "gbtimes.com", "url": "https://gbtimes.com/chinese-scientists-spot-spider-feeding-milk-to-its-young?cat=china-video", "body": "Chinese scientists have found that a female jumping spider produces nutrient-rich milk to feed her young for weeks, even after the spiderlings begin to hunt on their own, indicating that mammal-like milk provisioning and parental care has…", "field": "Zoology"}]}, {"text": "Are nuptial gifts or spermatophores produced by males to be consumed by females as nutrition and confer reproductive benefit?", "docs": [{"kind": "text", "domain": "natureworldnews.com", "url": "https://www.natureworldnews.com/articles/17479/20151013/edible-love-gifts-trick-female-crickets-monogamous-relationships-researchers.htm", "body": "Males crickets use a love gift to trick females into monogamous relationships. Male cricket suiters, it seems, are in the habit of gifting female crickets the equivalent of seductive \"chocolates\" in the form of unique edibles proteins that…", "field": "Ecology"}, {"kind": "text", "domain": "dl.tufts.edu", "url": "https://dl.tufts.edu/concern/pdfs/s4655t09p", "body": "Seminal influences: The role of nuptial gifts in sequential episodes of sexual selection. Abstract: Sexual selection drives the evolution of diverse traits that can prove advantageous in reproduction. Because females often mate with…", "field": "Ecology"}, {"kind": "image", "domain": "entomologytoday.org", "url": "https://entomologytoday.org/2020/02/14/nuptial-gifts-romantic-gestures-bug-insect-arthropod-world-valentines-day/", "img": "serper_07d4676d2fb6", "title": "Nuptial Gifts and Other Romantic Gestures of the Bug World", "field": "Zoology"}]}, {"text": "Have humans, via artificial selection, produced crops and other organisms that are effectively evolved (domesticated) to produce edible biomass intended for human consumption?", "docs": [{"kind": "image", "domain": "evolution.berkeley.edu", "url": "https://evolution.berkeley.edu/teach-resources/artificial-selection-of-corn/", "img": "serper_d5d45f84b3c0", "title": "Artificial selection of corn", "field": "Agriculture"}, {"kind": "image", "domain": "sciencedirect.com", "url": "https://www.sciencedirect.com/science/article/pii/S1674205219301297", "img": "serper_7f73b258f29f", "title": "De Novo Domestication: An Alternative Route toward New Crops ...", "field": "Agriculture"}]}]}, {"site": "music.stackexchange.com", "cat": "Culture & Recreation", "query": "How do multiple sound waves interact physically to create music? What happens on a physical level when many notes/sound waves interact with each other at the same time? (For example, a big chord on the piano with all of its harmonics/overtones clashing together.) I read somewhere that when there is order or symmetry we perceive sound waves as music but when there is irregular and none periodic sound waves we hear it as noise. Why is that the case? And I was wondering how there can be any type of order in so much complexity when we're playing music. What are the physics behind sound waves combining to create music? P.S. I know there are a lot of terms in my questions that can be subjective but I'm interested in the physics of it.", "persp": [{"text": "How do multiple sound waves physically superpose to form one composite waveform, and how does that produce beats or cancellation?", "docs": [{"kind": "image", "domain": "medium.com", "url": "https://medium.com/@jeannmobile/sound-waves-from-vibrations-to-pressure-waves-to-perception-digital-and-analog-too-f4ccabb0fb84", "img": "serper_d4089bf02d14", "title": "Sound Waves: From Vibrations, to Pressure Waves, to ...", "field": "Physics"}, {"kind": "image", "domain": "sfu.ca", "url": "https://www.sfu.ca/sonic-studio-webdav/cmns/Handbook%20Tutorial/Sound-Sound.html", "img": "serper_cac97b6e9d35", "title": "Sound-Sound Interaction", "field": "Physics"}]}, {"text": "How can any complex sound be decomposed into simple sine-wave components (Fourier series), and how does that relate to harmonics and timbre?", "docs": [{"kind": "text", "domain": "hyperphysics.phy-astr.gsu.edu", "url": "http://hyperphysics.phy-astr.gsu.edu/hbase/Audio/fourier.html", "body": "The mathematician Fourier proved that any continuous function could be produced as an infinite sum of sine and cosine waves. His result has far-reaching implications for the reproduction and synthesis of sound. A pure sine wave can be…", "field": "Mathematics"}, {"kind": "image", "domain": "musicandcomputersbook.com", "url": "https://musicandcomputersbook.com/chapter3/03_03.php", "img": "serper_5c5090a790b6", "title": "Music and Computers", "field": "Computer science"}]}, {"text": "What is the physical signal chain from an instrument being played to the brain creating the sensation of music?", "docs": [{"kind": "image", "domain": "kennedy-center.org", "url": "https://www.kennedy-center.org/education/resources-for-educators/classroom-resources/media-and-interactives/media/music/your-brain-on-music/your-brain-on-music/your-brain-on-music-the-sound-system-between-your-ears/", "img": "serper_45a8d27ede80", "title": "Your Brain on Music: The Sound System Between Your Ears", "field": "Neuroscience"}]}, {"text": "How does the auditory system segregate multiple simultaneous sounds into distinct streams (auditory scene analysis), and what perceptual rules determine when complex sound is heard as music versus noise?", "docs": [{"kind": "text", "domain": "actorproject.org", "url": "https://www.actorproject.org/timbreducation/2019/2/12/ttow-4-auditory-scene-analysis", "body": "This is a spectrograph, a way of visualizing sound in which the y axis represents frequency, the x axis represents time, and darkness or colour represents concentration of energy. Looking from bottom to top shows how the sound energy is…", "field": "Psychology"}]}]}, {"site": "biology.stackexchange.com", "cat": "Science", "query": "Does drinking coffee have negative effects? From what I collected, coffee is a magical potion that lets you feel energetic, and essentially not-sleepy. But are there any tradeoffs? I mean, if it was so beneficial, wouldn't the human body produce caffeine naturally?", "persp": [{"text": "Does caffeine/coffee cause acute increases in blood pressure, and what are the implications for people with hypertension?", "docs": [{"kind": "text", "domain": "cf.examinecdn.com", "url": "https://cf.examinecdn.com/nutrition/dark-side-of-dark-roast/", "body": "The average American adult consumes about 300 mg of caffeine per day. That’s equivalent to the caffeine content of nearly three cups of coffee (we have previously covered how much caffeine is safe to consume. It’s pretty clear that…", "field": "Medicine"}, {"kind": "image", "domain": "drbabak.org", "url": "https://drbabak.org/coffee-for-blood-pressure/", "img": "serper_71a9c868e69e", "title": "Is coffee good for high blood pressure? - Dr. Babak Clinic", "field": "Medicine"}]}, {"text": "What are the effects of caffeine on sleep, anxiety, tremor and other acute nervous-system symptoms?", "docs": [{"kind": "text", "domain": "healthfully.com", "url": "https://healthfully.com/494589-how-does-caffeine-affect-fibromyalgia-suffers.html", "body": "Why Am I Sensitive to Caffeine? How Does Caffeine Affect Fibromyalgia Suffers? Fibromyalgia is a disorder in which you experience widespread musculoskeletal pain, in addition to fatigue, sleep, memory and mood issues, states…", "field": "Neuroscience"}]}, {"text": "Does caffeine cause dependence and withdrawal symptoms?", "docs": [{"kind": "text", "domain": "overcaffeinated.org", "url": "http://www.overcaffeinated.org/caffeine/withdrawal/", "body": "Negative symptoms experienced after drug use are known as withdrawals. What is happening, in essence, is your body is crying out for you to take more of the drug. And if you listen to your body and take the drug again, the withdrawal…", "field": "Pharmacology"}, {"kind": "text", "domain": "universityhealthnews.com", "url": "https://universityhealthnews.com/daily/nutrition/symptoms-of-caffeine-withdrawal-worse-than-headaches/", "body": "The symptoms of caffeine withdrawal can be severe, extending beyond headaches to keep you from performing your daily life functions. Are you addicted to caffeine? Once you’ve become tolerant to caffeine, you need more and more to get its…", "field": "Pharmacology"}, {"kind": "image", "domain": "ethancrossingspringfield.com", "url": "https://ethancrossingspringfield.com/rehab-blog/caffeine-withdrawal/", "img": "serper_98a8ffcc3508", "title": "Caffeine Withdrawal: Symptoms, Process, Risks, and Aftercare ...", "field": "Pharmacology"}, {"kind": "image", "domain": "flaglerhealing.com", "url": "https://flaglerhealing.com/caffeine-withdrawal/", "img": "serper_dda60fd58177", "title": "Caffeine Withdrawal: Definition, Symptoms, Process, and ...", "field": "Pharmacology"}]}, {"text": "Does the method of coffee preparation (filtered vs. unfiltered) influence lipid effects relevant to people with dyslipidemia?", "docs": [{"kind": "text", "domain": "nutralegacy.com", "url": "http://www.nutralegacy.com/blog/general-healthcare/relation-between-drinking-coffee-and-cholesterol-levels/", "body": "Is there really a relation between coffee and cholesterol levels? There is but it’s not one that people will expect. The stimulant in coffee – namely caffeine – is not the problem when it comes to following diets for high cholesterol. In…", "field": "Nutrition"}, {"kind": "image", "domain": "sweetspotnutrition.ca", "url": "https://sweetspotnutrition.ca/unfiltered-coffee/", "img": "serper_b16f6f25b757", "title": "Surprise, Surprise: Unfiltered Coffee Raises Cholesterol ...", "field": "Nutrition"}]}, {"text": "Does caffeine affect urine production, cortisol secretion, and fine motor control?", "docs": [{"kind": "text", "domain": "dovemed.com", "url": "https://www.dovemed.com/healthy-living/wellness-center/are-there-health-benefits-drinking-caffeine/", "body": "Are There Health Benefits To Drinking Caffeine? Caffeine also stimulates the heart, smooth muscles, increases stomach secretions, and promotes urination. Human beings love their caffeine. In fact, caffeine is the most commonly used drug in…", "field": "Physiology"}]}]}, {"site": "biology.stackexchange.com", "cat": "Science", "query": "Are there any motile plants? There are numerous examples of sessile animals (sponges, barnacles etc.) but are there any examples of motile plants? If not, why not? Surely mobility would have conferred an evolutionary advantage to some plant species. I am specifically thinking of locomotion here.", "persp": [{"text": "Do seeds and pollen count as motile stages of plants that relocate by dispersal (wind, water, animals)?", "docs": [{"kind": "text", "domain": "virtualvoices.org", "url": "http://virtualvoices.org/tag/seed-education/", "body": "Seeds leave their parent plant in five ways. Some seeds can be dispersed in more than one way! The conceptual foundation of SEED was inspired by the book, Seeds: time capsules of life by Wolfgang Stuppy & Rob Kesseler. They focus on the…", "field": "Botany"}, {"kind": "image", "domain": "frontiersin.org", "url": "https://www.frontiersin.org/journals/plant-science/articles/10.3389/fpls.2021.626405/full", "img": "serper_d14753c6f175", "title": "Frontiers | By Animal, Water, or Wind: Can Dispersal Mode ...", "field": "Ecology"}]}, {"text": "Do any land plants produce motile sperm or gametes that swim using flagella?", "docs": [{"kind": "text", "domain": "pollennetwork.org", "url": "http://pollennetwork.org/pubs/transcriptional-framework-male-gametogenesis-liverwort-marchantia-polymorpha-l", "body": "In land plants, there are two types of male gametes: one is a non-motile sperm cell which is delivered to the egg cell by a pollen tube, and the other is a motile sperm cell with flagella. The molecular mechanism underlying the sexual…", "field": "Botany"}, {"kind": "text", "domain": "botanydictionary.org", "url": "http://botanydictionary.org/antherozoid.html", "body": "(spermatozoid) A motile male gamete produced by lower plants and some gymnosperms, which moves by means of flagella. In lower plants antherozoids are released from an antheridium but in the gymnosperms they are formed in the pollen tube…", "field": "Botany"}, {"kind": "image", "domain": "digitalatlasofancientlife.org", "url": "https://www.digitalatlasofancientlife.org/learn/embryophytes/life_cycle/", "img": "serper_6880bbc28d57", "title": "The Land Plant Life Cycle - Digital Atlas of Ancient Life", "field": "Paleontology"}]}, {"text": "Do chlorophyll-bearing algae have flagella and the ability to swim or migrate through water?", "docs": [{"kind": "text", "domain": "softbites.org", "url": "https://softbites.org/2018/10/05/sticky-light-switches-should-i-stay-or-should-i-go/", "body": "“One day it’s fine and next it’s…” red? Microscopic algae depend on photosynthesis, so they follow the light. Previous research has shown that their swimming is directed towards white light but not to red light. New work shows that…", "field": "Microbiology"}]}, {"text": "How is plant movement measured (e.g., what instruments like the crescograph record)?", "docs": [{"kind": "text", "domain": "australianhumanitiesreview.org", "url": "http://australianhumanitiesreview.org/2016/04/10/review/", "body": "In the early part of the twentieth century the Indian biophysicist Sir Jagadish Bose invented an instrument for measuring plant growth. Called the ‘magnetic crescograph’, it enabled Bose to detect extremely tiny movements in the plant. So…", "field": "History"}, {"kind": "image", "domain": "en.wikipedia.org", "url": "https://en.wikipedia.org/wiki/Crescograph", "img": "serper_21eb38f59b3c", "title": "Crescograph - Wikipedia", "field": "Engineering"}, {"kind": "image", "domain": "en.wikisource.org", "url": "https://en.wikisource.org/wiki/Researches_on_Irritability_of_Plants/Chapter_2", "img": "serper_a4e38c0a0fb6", "title": "Researches on Irritability of Plants/Chapter 2 - Wikisource ...", "field": "History"}]}, {"text": "What growth-based and stimulus-driven movements do plants exhibit (tropisms and growth responses) that change their orientation or position?", "docs": [{"kind": "text", "domain": "britannica.com", "url": "https://www.britannica.com/science/tropism", "body": "Tropism, response or orientation of a plant or certain lower animals to a stimulus that acts with greater intensity from one direction than another. It may be achieved by active movement or by structural alteration. Forms of tropism include…", "field": "Botany"}, {"kind": "image", "domain": "biorender.com", "url": "https://www.biorender.com/template/plant-tropisms-plant-growth-in-response-to-directional-stimuli", "img": "serper_d9903dc57376", "title": "Plant Tropisms - Plant Growth in Response to Directional ...", "field": "Botany"}]}, {"text": "Do specific plant parts show motility (e.g., nyctinastic leaf movements, heliotropic flowers, carnivorous plant movements)?", "docs": [{"kind": "image", "domain": "link.springer.com", "url": "https://link.springer.com/chapter/10.1007/978-981-13-2023-1_29", "img": "serper_86f4921f63e8", "title": "Plant Movements | Springer Nature Link", "field": "Botany"}, {"kind": "image", "domain": "plantclub.io", "url": "https://www.plantclub.io/blog-en/nyctinasty-the-movement-of-plants", "img": "serper_2bf4604f713a", "title": "Nyctinasty: the movement of plants | plantclub.io", "field": "Botany"}]}]}, {"site": "travel.stackexchange.com", "cat": "Culture & Recreation", "query": "Japanese etiquette: Most common (and offensive) mistakes? I am aware that Japan has many unwritten rules of etiquette. What are some of the most common (and offensive) breaches of etiquette made by visitors? On the flip side, what behaviors show respect and understanding of the Japanese culture?", "persp": [{"text": "How should I bow and reciprocate bows to show proper respect in Japan?", "docs": [{"kind": "text", "domain": "list.ly", "url": "https://list.ly/list/1skX-5-customs-you-must-know-before-visiting-japan-learn-social-politeness", "body": "Japanese customs and courtesies are famous the world over and respect and etiquette are pounded into children from a school going age. Here's how you stay polite and respectful as a visitor. Bowing is second nature in Japan; you will notice…", "field": "Culture"}, {"kind": "image", "domain": "nippon.com", "url": "https://www.nippon.com/en/guide-to-japan/gu020001/", "img": "serper_2db9a3df685c", "title": "How to Bow: An Essential Form of Respect in Japan | Nippon.com", "field": "Culture"}]}, {"text": "Is slurping ramen considered acceptable or even polite in Japan?", "docs": [{"kind": "text", "domain": "japanblogger.com", "url": "https://www.japanblogger.com/Slurping-noodles.html", "body": "It’s true, slurping noodles is not only accepted in Japan, but is also polite. This is one of those customs that is hard for some foreigners to grasp because it is almost completely opposite many Western countries. When you get your…", "field": "Food"}, {"kind": "image", "domain": "makimono-manners.com", "url": "https://makimono-manners.com/en/392/", "img": "serper_2041bedb2797", "title": "Is Slurping Ramen Considered Rude? A Deep Dive into Japan's ...", "field": "Food"}]}, {"text": "Is blowing your nose in public considered rude in Japan?", "docs": [{"kind": "text", "domain": "wikihow.com", "url": "https://www.wikihow.com/Blow-Your-Nose-in-Japan", "body": "You may be traveling to Japan and have heard that under no circumstances are you to blow your nose, as it is considered a horrible social offense. Fortunately, this isn’t entirely true. The most important things to remember when you need to…", "field": "Health"}]}, {"text": "What are the correct rules for exchanging and handling business cards (meishi) in Japan?", "docs": [{"kind": "text", "domain": "japanforyou.com", "url": "https://www.japanforyou.com/business-card-exchange-in-japan/", "body": "While on a group tour, business trip or incentive travel to Japan, it is customary in many situations to exchange business cards with your host. The Japanese have a precise set of manners, called Meishi, to initiate the exchange of business…", "field": "Business"}, {"kind": "image", "domain": "japanlivingguide.com", "url": "https://www.japanlivingguide.com/career/business-etiquette/japan-business-card-etiquette/", "img": "serper_8081a05d5819", "title": "Business Card Etiquette in Japan – How to Exchange Business Cards - Living  Guide in Japan", "field": "Business"}, {"kind": "image", "domain": "cotoacademy.com", "url": "https://cotoacademy.com/exchanging-businesscard-meishi/", "img": "serper_bc281c6f8ab6", "title": "Guide to Exchanging Japanese Business Cards: Meishi (名刺)", "field": "Language"}]}, {"text": "Should I remove my shoes before entering a Japanese home?", "docs": [{"kind": "text", "domain": "visiontimes.com", "url": "http://www.visiontimes.com/2016/12/02/the-japanese-custom-of-removing-shoes.html", "body": "If you have been to Japan, you know that its people have deeply entrenched traditions about removing their shoes before entering homes and other indoor places. The custom of removing ones footwear before entering a house stems from the…", "field": "History"}, {"kind": "text", "domain": "enjoyhakone.com", "url": "http://enjoyhakone.com/when-do-you-have-to-take-your-shoes-off-in-hakone-tips-that-will-come-in-handy", "body": "A well-known part of the Japanese culture is that the Japanese remove their shoes before entering houses. To the Japanese, it may seem like a very unique feature of their culture, but there are actually many other countries that adopt this…", "field": "Culture"}, {"kind": "image", "domain": "sugueh.wordpress.com", "url": "https://sugueh.wordpress.com/2013/08/27/take-off-your-shoes/", "img": "serper_0767037819fd", "title": "Take off your shoes! | Sugueh 「すげー」", "field": "Culture"}]}]}, {"site": "photography.stackexchange.com", "cat": "Culture & Recreation", "query": "How can a camera pick up and process colors? How does a camera/AI/ robotics process and determine the color of a specific object ?", "persp": [{"text": "How do camera image sensors (photosites) convert incoming light into electrical signals representing brightness?", "docs": [{"kind": "image", "domain": "thinklucid.com", "url": "https://thinklucid.com/tech-briefs/understanding-digital-image-sensors/?srsltid=AfmBOoqhUhAxHuZTzCfFcZwfQ9vg05yhKOlq0CahctJimAunjlSt3vTr", "img": "serper_7f8fadb67887", "title": "Understanding How the Digital Image Sensor Works - LUCID ...", "field": "Electronics"}, {"kind": "image", "domain": "digitalbirdphotography.com", "url": "https://digitalbirdphotography.com/2.5.html", "img": "serper_6aa23a6ae1d6", "title": "Secrets of Digital Bird Photography", "field": "Photography"}]}, {"text": "What is a Bayer filter (color filter array) and how does it allow a digital camera to record color information?", "docs": [{"kind": "image", "domain": "en.wikipedia.org", "url": "https://en.wikipedia.org/wiki/Bayer_filter", "img": "serper_acda01d140ed", "title": "Bayer filter - Wikipedia", "field": "Optics"}, {"kind": "image", "domain": "connorwhitemedia.com", "url": "https://connorwhitemedia.com/blogs/f/why-image-sensors-use-two-green-pixels-in-the-bayer-filter", "img": "serper_86d410a7ea8a", "title": "Why Image Sensors Use Two Green Pixels in the Bayer Filter", "field": "Optics"}]}, {"text": "How do cameras reconstruct full RGB color values for each image pixel when each photosite only measures one filtered brightness value?", "docs": [{"kind": "text", "domain": "rawdigger.com", "url": "https://www.rawdigger.com/node/377", "body": "how is conversion to RGB done? 1) When Display is set to 'RGB render', I gather white balancing and exposure may be adjusted, as controlled by Preferences. When building the RGB values for a pixel, is any information other than the 4 RGBG…", "field": "Computer science"}]}, {"text": "How did chemical color film record colors compared with modern digital sensors?", "docs": [{"kind": "text", "domain": "bigvince.net", "url": "https://bigvince.net/2018/08/06/digital-vs-analog-side-by-side/", "body": "Obviously, the medium is very different. Digital images are captured electronically by a sensor, processed by an image processor, and then stored as some kind of file. Analog images are captured on some material with light sensitive…", "field": "Photography"}, {"kind": "text", "domain": "explainthatstuff.com", "url": "https://www.explainthatstuff.com/digitalcameras.html", "body": "Digital cameras give a whole new meaning to the idea of painting by numbers. Unlike old-style film cameras, they capture and record images of the world around us using digital technology. In other words, they store photographs not as…", "field": "Photography"}, {"kind": "image", "domain": "hometheaterhifi.com", "url": "https://hometheaterhifi.com/technical/technical-reviews/how-black-white-and-color-photographic-film-is-manufactured-how-color-film-works-and-why-some-movies-are-still-shot-on-film/", "img": "serper_6c616010ce31", "title": "How Black & White and Color Photographic Film Are ...", "field": "Chemistry"}]}]}, {"site": "diy.stackexchange.com", "cat": "Life & Arts", "query": "How can I remove humidity from a room without a dehumidifier? I've noticed a problem in my apartment that returns every winter - I get mold around the windows. This year the cold weather came earlier than usual and the mold appeared quickly in great amounts, so I am looking for a way to at least reduce the thickness of it. My guess that the molds cause is the humid air would be the fact that very often I can see a condensation on the window, and, since the windows are plastic ones, I guess they don't \"breathe\" like the wooden ones would. I've heard about putting bowls of salt around by the windows that would attract the moisture, but some suggest other substances like silica gel since they absorb the moisture better. Problems I see with getting silica gel are that I'm not sure where to get it for starters, am not sure about the price - whether it wouldn't be too pricy and, since I own a cat, I don't want the little adventurer to try out new things to eat - how would I store it so it would do it's job and not harm my pet. I mentioned \"without a dehumidifier\" in my question title because buying one just isn't in my budget at the moment, so I'm looking for some temporary solutions right now. Any tips gladly appreciated.", "persp": [{"text": "Could the visible mold around windows indicate mold growth inside surrounding drywall, requiring landlord or public-health involvement?", "docs": [{"kind": "image", "domain": "totalcarerestoration.com", "url": "https://totalcarerestoration.com/tell-mold-behind-walls/", "img": "serper_c4dee33c2228", "title": "Black Mold on Walls: How to Detect & Test for Mold in Drywall", "field": "Microbiology"}]}, {"text": "Is condensation on windows often caused by steam from showering?", "docs": [{"kind": "text", "domain": "reference.com", "url": "https://www.reference.com/science/windows-steam-up-house-a8a14a25824b0b9f", "body": "The reason your windows become steamed up or foggy is that water droplets condense out of the air onto the glass. The moisture in the air is not attracted to the glass specifically; rather, the moisture condenses on the coolest surfaces in…", "field": "Physics"}, {"kind": "text", "domain": "clerawindows.com", "url": "https://www.clerawindows.com/blog/windows/control-condensation-home-windows/", "body": "Condensation happens when moisture gets trapped between the inside surface of the window. Condensation is when water vapor (humidity) changes from air to liquid on contact with these cold surfaces, such as on a window. It appears like foggy…", "field": "Physics"}]}, {"text": "Does keeping the bathroom door closed and running the exhaust fan during and for ~30 minutes after a shower reduce indoor humidity and window condensation?", "docs": [{"kind": "text", "domain": "showerlagoon.com", "url": "https://showerlagoon.com/avoid-bathroom-condensation/", "body": "Condensation is a common concern for every bathroom. It’s an extremely humid environment where a lot of moisture is released in an indoor environment and into the air. Condensation happens when cold air meets the hot steam and forms tiny…", "field": "Engineering"}]}, {"text": "Can a thermal imager (e.g., FLIR One) help locate cold leaks around windows that contribute to condensation?", "docs": [{"kind": "image", "domain": "flir.com", "url": "https://www.flir.com/discover/home-outdoor/5-ways-you-can-use-your-new-flir-one-edge-pro-around-the-house/", "img": "serper_1a1ceedbeffd", "title": "5 ways you can use your new FLIR ONE® Edge Pro around the ...", "field": "Engineering"}, {"kind": "image", "domain": "tomsguide.com", "url": "https://www.tomsguide.com/opinion/i-used-this-thermal-camera-to-identify-heat-loss-in-my-home-heres-what-i-found", "img": "serper_701f081c32bc", "title": "I used this thermal camera to identify heat loss in my home ...", "field": "Engineering"}]}, {"text": "Should visible mold be removed and the area disinfected, and should faulty window jambs be inspected/fixed to prevent recurrence?", "docs": [{"kind": "image", "domain": "moldhelpforyou.com", "url": "https://moldhelpforyou.com/mold-on-windows/", "img": "serper_6e93975c2363", "title": "Your Guide To Mold On Windows And Window Sills | Mold Help ...", "field": "Public health"}]}]}, {"site": "workplace.stackexchange.com", "cat": "Professional", "query": "What are some good resources for improving communication skills? I am not as good at communicating with others as I'd like to be. I'm sure many other software geeks and introverts have some difficulty here. Are there any good resources out there? Either blogs or books or just little tips that make things easier when trying to communicate ideas with coworkers. I'll spend a while writing a nice email that I feel like nobody actually reads or I'll miss the point of an email I'm reading. I get into IM conversations and we end up spending hours going back and forth. On phone calls I'll get asked something that I need more time to process and I lock up. In other cases when I know what I'm talking about I try to explain what is in my head, but if they don't grasp the idea immediately I'm stuck just repeating myself and hoping that it will eventually make sense to them. It feels like it takes a lot more of my time and energy than it should to communicate even simple ideas. Maybe that's just the way it is and it takes more practice. But I would welcome any tips that make the process smoother or easier.", "persp": [{"text": "What role does deliberate practice play in improving everyday communication skills?", "docs": [{"kind": "text", "domain": "performance-rules.com", "url": "http://performance-rules.com/coaching/practice-makes-performance/", "body": "Practice Makes Performance « Performance Rules! The old saying, “practice makes perfect” is not completely accurate. In fact, only perfect practice makes perfect, because the more you practice making mistakes, the better you get at making…", "field": "Psychology"}]}, {"text": "What books are commonly recommended for improving workplace and interpersonal communication?", "docs": [{"kind": "text", "domain": "executiveheadhunters.co.uk", "url": "https://www.executiveheadhunters.co.uk/blog/identify-barriers-communication-5-hr-relationship-building-books/", "body": "Do you feel like communication in your business could be better? Is one of your workers causing problems by being more of a hermit than a people person? Communication between workers is vital to success. As HR manager/director one of your…", "field": "Management"}, {"kind": "image", "domain": "readingraphics.com", "url": "https://readingraphics.com/book-recommendations-best-books-on-communication-for-meaningful-interactions-at-work/", "img": "serper_00db53c14fc4", "title": "Best Books on Communication to Read in 2024", "field": "Literature"}]}, {"text": "How can joining a public-speaking club like Toastmasters help improve communication and presentation skills?", "docs": [{"kind": "text", "domain": "drtm.org", "url": "http://drtm.org/Guests/Testimonials", "body": "\"Join Toastmasters. Oral communications skills count. Height and hair color may be in the genes, but public speaking isn't. One good answer to the public speaking problem is Toastmasters. They do a fabulous job of helping people shape up…", "field": "Communication"}, {"kind": "text", "domain": "beckenhamcommunicators.co.uk", "url": "https://www.beckenhamcommunicators.co.uk/tag/personaldevelopment/", "body": "Improve your public speaking skills! Nothing will improve your presentation skills more than straight up practice. Engaging in public speaking opportunities whenever you can will give you increased command over your delivery. This helps…", "field": "Communication"}, {"kind": "image", "domain": "toastmasters.org", "url": "https://www.toastmasters.org/membership/why-toastmasters", "img": "serper_544e66d619a0", "title": "Toastmasters International -why-toastmasters", "field": "Communication"}]}, {"text": "What meeting practices (agenda, note-taking, action-items, recaps) improve clarity and reduce follow-up confusion at work?", "docs": [{"kind": "text", "domain": "dominikberner.ch", "url": "http://dominikberner.ch/Efficient-Meetings/", "body": "When you schedule a meeting prepare an agenda and send it to anybody involved. Preferably early enough so anybody can read through it and comment on the agenda if necessary. Tell everybody what this meeting will be about and what its goals…", "field": "Management"}, {"kind": "text", "domain": "sakasandcompany.com", "url": "https://sakasandcompany.com/better-client-meetings/", "body": "Want better client meetings? Add these 3 things at your agency! Want better client meetings at your agency? Always include 3 things: an agenda, recap, and followups. Think about the best meeting you’ve had with a client… and the worst…", "field": "Management"}]}, {"text": "What specific email and writing habits help ensure people actually read and understand your messages?", "docs": [{"kind": "text", "domain": "crystelcall.com", "url": "http://www.crystelcall.com/blog/view-story/444/how-to-make-sure-busy-people-read-your-email", "body": "Email has long since become the preferred type of communication in offices. Email allows for convenience, simplicity and a record of conversations for clarity. However, an email is much easier to ignore, or forget about, than in-person…", "field": "Writing"}, {"kind": "image", "domain": "in.indeed.com", "url": "https://in.indeed.com/career-advice/career-development/email-writing-format-in-english", "img": "serper_eeb06510b225", "title": "Email Writing Format In English: A Complete Guide | Indeed ...", "field": "Writing"}]}]}, {"site": "aviation.stackexchange.com", "cat": "Professional", "query": "How has weight been reduced in commercial aircraft design and how will this trend continue? Reducing weight of aircraft has become a priority as the aviation industry seeks greater fuel efficiency and commits to strict emissions targets. How much weight has been cut from single and twin aisle aircraft in last 10 yrs and where? How much further can OEM's and suppliers cut weight in the next 10 years and in what components/equipment/furnishings will the greatest savings be made? I am looking for some fun and relevant facts on this subject for an article I am writing.", "persp": [{"text": "How have composite fan blades and other composite engine components reduced engine weight and improved efficiency?", "docs": [{"kind": "text", "domain": "ati.org.uk", "url": "https://www.ati.org.uk/portfolio/projects/project-4-next-generation-fan-system/", "body": "Rolls-Royce is developing a composite fan system for deployment in future civil gas turbine engines. The primary aim of a composite fan system is to deliver a significant weight saving. The blades and associated composite engine casings…", "field": "Materials science"}, {"kind": "image", "domain": "safefly.aero", "url": "https://safefly.aero/latest-trends-in-aircraft-jet-engine-technology/", "img": "serper_5f34e185fd3d", "title": "Latest Trends in Aircraft Jet Engine Technology – Innovation ...", "field": "Engineering"}]}, {"text": "How have modern slimline seat designs reduced cabin weight and impacted aircraft layout?", "docs": [{"kind": "image", "domain": "insights.aircraftinteriorsexpo.com", "url": "https://insights.aircraftinteriorsexpo.com/2024/04/11/take-your-seats-to-the-future-of-sustainable-aviation/", "img": "serper_7e9869cf70bb", "title": "Take Your Seats to the Future of Sustainable Aviation | AIX Hub", "field": "Design"}]}, {"text": "How have lavatory/toilet design changes contributed to aircraft weight reduction (lighter systems and lower water carriage)?", "docs": [{"kind": "image", "domain": "satelliteindustries.com", "url": "https://www.satelliteindustries.com/blog/vacuum-toilet-system-in-aircraft/", "img": "serper_42427c487146", "title": "Vacuum toilet system in aircraft: 1st Revolutionary", "field": "Engineering"}]}, {"text": "How have increasing passenger average weights affected aircraft weight planning?", "docs": [{"kind": "text", "domain": "aviationcv.com", "url": "https://www.aviationcv.com/aviation-blog/2017/finnair-wants-weigh-passengers-flights", "body": "Finland's Finnair is hoping to get at least 150 passengers on every flight to volunteer to be weighed along with their luggage. While it may sound unusual, there's logic behind the move: The airline wants a more accurate metric for…", "field": "Business"}]}]}];
+    var IMG_SRC = {"serper_00db53c14fc4": "static/images/samples/serper_00db53c14fc4.jpg", "serper_02228e3ebaad": "static/images/samples/serper_02228e3ebaad.jpg", "serper_0767037819fd": "static/images/samples/serper_0767037819fd.jpg", "serper_07d4676d2fb6": "static/images/samples/serper_07d4676d2fb6.jpg", "serper_12bc3988650c": "static/images/samples/serper_12bc3988650c.jpg", "serper_1a1ceedbeffd": "static/images/samples/serper_1a1ceedbeffd.jpg", "serper_2041bedb2797": "static/images/samples/serper_2041bedb2797.jpg", "serper_21eb38f59b3c": "static/images/samples/serper_21eb38f59b3c.jpg", "serper_2bf4604f713a": "static/images/samples/serper_2bf4604f713a.jpg", "serper_2db9a3df685c": "static/images/samples/serper_2db9a3df685c.jpg", "serper_42427c487146": "static/images/samples/serper_42427c487146.jpg", "serper_45a8d27ede80": "static/images/samples/serper_45a8d27ede80.jpg", "serper_544e66d619a0": "static/images/samples/serper_544e66d619a0.jpg", "serper_54d97766737d": "static/images/samples/serper_54d97766737d.jpg", "serper_5ac859c72e00": "static/images/samples/serper_5ac859c72e00.jpg", "serper_5c5090a790b6": "static/images/samples/serper_5c5090a790b6.jpg", "serper_5f34e185fd3d": "static/images/samples/serper_5f34e185fd3d.jpg", "serper_638537856ff9": "static/images/samples/serper_638537856ff9.jpg", "serper_6880bbc28d57": "static/images/samples/serper_6880bbc28d57.jpg", "serper_6aa23a6ae1d6": "static/images/samples/serper_6aa23a6ae1d6.jpg", "serper_6c616010ce31": "static/images/samples/serper_6c616010ce31.jpg", "serper_6e93975c2363": "static/images/samples/serper_6e93975c2363.jpg", "serper_701f081c32bc": "static/images/samples/serper_701f081c32bc.jpg", "serper_71a9c868e69e": "static/images/samples/serper_71a9c868e69e.jpg", "serper_774f69f67b56": "static/images/samples/serper_774f69f67b56.jpg", "serper_7d71fafa6a0f": "static/images/samples/serper_7d71fafa6a0f.jpg", "serper_7e9869cf70bb": "static/images/samples/serper_7e9869cf70bb.jpg", "serper_7f73b258f29f": "static/images/samples/serper_7f73b258f29f.jpg", "serper_7f8fadb67887": "static/images/samples/serper_7f8fadb67887.jpg", "serper_8081a05d5819": "static/images/samples/serper_8081a05d5819.jpg", "serper_86d410a7ea8a": "static/images/samples/serper_86d410a7ea8a.jpg", "serper_86f4921f63e8": "static/images/samples/serper_86f4921f63e8.jpg", "serper_88a7d870c6bb": "static/images/samples/serper_88a7d870c6bb.jpg", "serper_966e526fcb89": "static/images/samples/serper_966e526fcb89.jpg", "serper_98a8ffcc3508": "static/images/samples/serper_98a8ffcc3508.jpg", "serper_9c388141724c": "static/images/samples/serper_9c388141724c.jpg", "serper_a4e38c0a0fb6": "static/images/samples/serper_a4e38c0a0fb6.jpg", "serper_acda01d140ed": "static/images/samples/serper_acda01d140ed.jpg", "serper_b16f6f25b757": "static/images/samples/serper_b16f6f25b757.jpg", "serper_bc281c6f8ab6": "static/images/samples/serper_bc281c6f8ab6.jpg", "serper_c4dee33c2228": "static/images/samples/serper_c4dee33c2228.jpg", "serper_cac97b6e9d35": "static/images/samples/serper_cac97b6e9d35.jpg", "serper_d14753c6f175": "static/images/samples/serper_d14753c6f175.jpg", "serper_d4089bf02d14": "static/images/samples/serper_d4089bf02d14.jpg", "serper_d5d45f84b3c0": "static/images/samples/serper_d5d45f84b3c0.jpg", "serper_d9903dc57376": "static/images/samples/serper_d9903dc57376.jpg", "serper_dda60fd58177": "static/images/samples/serper_dda60fd58177.jpg", "serper_eca4a39ed270": "static/images/samples/serper_eca4a39ed270.jpg", "serper_eeb06510b225": "static/images/samples/serper_eeb06510b225.jpg", "serper_f1f77d9106ec": "static/images/samples/serper_f1f77d9106ec.jpg"};
+
+    function escapeHtml(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // Benchmark samples: scrollable query list (left) + selected query with perspectives and gold documents (right).
+    (function () {
+      var list = document.getElementById("sample-list"), view = document.getElementById("sample-view");
+      function split(q) {
+        var cut = q.indexOf("?") + 1;
+        return cut > 0 && cut <= 160 ? [q.slice(0, cut), q.slice(cut).trim()] : ["", q];
+      }
+      function show(k) {
+        Array.prototype.forEach.call(list.children, function (b, j) { b.setAttribute("aria-selected", String(j === k)); });
+        var s = SAMPLES[k], qb = split(s.query);
+        var html = '<p class="meta">' + escapeHtml(s.site) + ' &middot; ' + escapeHtml(s.cat) + '</p>' +
+                   (qb[0] ? '<p class="q">' + escapeHtml(qb[0]) + '</p>' : '') +
+                   (qb[1] ? '<p class="body">' + escapeHtml(qb[1]) + '</p>' : '');
+        s.persp.forEach(function (p, i) {
+          var docs = p.docs.map(function (d) {
+            var head = '<span class="who"><span class="' + (d.kind === "text" ? "lbl-text" : "lbl-image") + '">' +
+                       d.kind.toUpperCase() + '</span>' + (d.field ? ' &middot; ' + escapeHtml(d.field) : '') + ' &middot; <a href="' + escapeHtml(d.url) + '" target="_blank" rel="noopener">' +
+                       escapeHtml(d.domain) + '</a></span>';
+            var body = d.kind === "text" ? escapeHtml(d.body)
+              : '<img src="' + IMG_SRC[d.img] + '" alt="' + escapeHtml(d.title) + '" loading="lazy" /><span class="cap">' + escapeHtml(d.title) + '</span>';
+            return '<div class="doc-item">' + head + body + '</div>';
+          }).join("");
+          html += '<div class="persp-block"><p class="persp-tag">Perspective ' + (i + 1) + '</p><p class="persp-head">' +
+                  escapeHtml(p.text) + '</p><div class="doc-grid">' + docs + '</div></div>';
+        });
+        view.innerHTML = html;
+        view.scrollTop = 0;
+      }
+      SAMPLES.forEach(function (s, k) {
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "sample-item"; b.setAttribute("role", "tab");
+        var qb = split(s.query);
+        b.innerHTML = '<span class="meta">' + escapeHtml(s.cat) + ' &middot; ' + s.persp.length + ' perspectives</span>' +
+                      '<span class="label">' + escapeHtml(qb[0] || qb[1]) + '</span>';
+        b.addEventListener("click", function () { show(k); });
+        list.appendChild(b);
+      });
+      show(0);
+    })();
+
+    // Main results (paper Table 2).
+    var ROWS = [
+      ["MM-Embed", [
+        ["Naive", 1, 0, 0, 28.83, 52.26, 39.52, 49.53], ["Naive", 1, 1, 0, 28.38, 53.96, 41.55, 51.80],
+        ["LLM-Expansion", 5, 0, 1, 22.11, 47.37, 37.13, 47.32], ["SPIN (ours)", 5, 0, 1, 35.24, 59.17, 59.05, 67.54],
+        ["Oracle", 4.6, null, null, 44.41, 71.71, 70.80, 79.29]]],
+      ["GME-Qwen2", [
+        ["Naive", 1, 0, 0, 21.81, 42.08, 35.40, 44.86], ["Naive", 1, 1, 0, 24.20, 50.84, 36.19, 46.38],
+        ["LLM-Expansion", 5, 0, 1, 25.84, 51.04, 38.01, 47.99], ["ARE", 5, 1, 0, 30.40, 59.35, 41.53, 53.55],
+        ["SPIN (ours)", 5, 0, 1, 34.02, 58.62, 56.00, 64.81], ["Oracle", 4.6, null, null, 57.12, 77.68, 72.12, 79.95]]],
+      ["Qwen3-VL", [
+        ["Naive", 1, 0, 0, 25.55, 48.28, 36.22, 45.63], ["Naive", 1, 1, 0, 28.06, 59.37, 41.41, 52.44],
+        ["LLM-Expansion", 5, 0, 1, 25.33, 50.95, 37.75, 48.31], ["ARE", 5, 1, 0, 33.36, 61.60, 44.73, 56.01],
+        ["SPIN (ours)", 5, 0, 1, 37.83, 63.44, 59.35, 67.47], ["Oracle", 4.6, null, null, 52.31, 73.76, 70.04, 78.14]]]
+    ];
+    var mark = function (v) { return v === null ? "&ndash;" : v ? '<span class="ck">&#10003;</span>' : '<span class="x">&#10007;</span>'; };
+    document.getElementById("main-table").innerHTML = ROWS.map(function (g) {
+      var rows = g[1], scored = rows.filter(function (r) { return r[0] !== "Oracle"; });
+      var best = [4, 5, 6, 7].map(function (k) { return Math.max.apply(null, scored.map(function (r) { return r[k]; })); });
+      return rows.map(function (r, i) {
+        var cls = (i === 0 ? "section-break " : "") + (r[0].indexOf("SPIN") === 0 ? "ours" : r[0] === "Oracle" ? "oracle" : "");
+        var nums = [4, 5, 6, 7].map(function (k, j) {
+          var v = r[k].toFixed(2), b = r[0] !== "Oracle" && r[k] === best[j] ? "<strong>" + v + "</strong>" : v;
+          return '<td' + (j % 2 === 0 ? ' class="divider"' : '') + '>' + b + '</td>';
+        }).join("");
+        var head = i === 0 ? '<th class="scenario" scope="rowgroup" rowspan="' + rows.length + '">' + g[0] + '</th>' : "";
+        return '<tr class="' + cls + '">' + head + '<td class="method">' + r[0] + '</td><td>' + r[1] + '</td><td>' + mark(r[2]) + '</td><td>' + mark(r[3]) + '</td>' + nums + '</tr>';
+      }).join("");
+    }).join("");
+
+    var sectionNavLinks = Array.from(document.querySelectorAll(".section-nav a"));
+    var sectionNav = document.querySelector(".section-nav");
+    var trackedSections = sectionNavLinks
+      .map(function (link) { return document.querySelector(link.getAttribute("href")); })
+      .filter(Boolean);
+    var updateActiveSectionFromScroll = function () {
+      var activationLine = sectionNav.getBoundingClientRect().bottom + 1;
+      var activeSectionId = null;
+      trackedSections.forEach(function (section) {
+        if (section.getBoundingClientRect().top <= activationLine) activeSectionId = section.id;
+      });
+      sectionNavLinks.forEach(function (link) {
+        var isActive = Boolean(activeSectionId) && link.getAttribute("href") === "#" + activeSectionId;
+        link.classList.toggle("is-active", isActive);
+        if (isActive) link.setAttribute("aria-current", "true"); else link.removeAttribute("aria-current");
+      });
+    };
+    window.addEventListener("scroll", updateActiveSectionFromScroll, { passive: true });
+    window.addEventListener("resize", updateActiveSectionFromScroll);
+    window.requestAnimationFrame(updateActiveSectionFromScroll);
+
+    var copyBibtexButton = document.getElementById("copy-bibtex");
+    var bibtexCode = document.getElementById("bibtex-code");
+    var bibtexCopyStatus = document.getElementById("bibtex-copy-status");
+    var copyResetTimer;
+    function fallbackCopyText(text) {
+      return new Promise(function (resolve, reject) {
+        var textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.setAttribute("readonly", "");
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        var copied = document.execCommand("copy");
+        textarea.remove();
+        copied ? resolve() : reject(new Error("Copy command failed"));
+      });
+    }
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        return navigator.clipboard.writeText(text).catch(function () { return fallbackCopyText(text); });
+      }
+      return fallbackCopyText(text);
+    }
+    copyBibtexButton.addEventListener("click", function () {
+      copyText(bibtexCode.textContent.trim()).then(function () {
+        copyBibtexButton.textContent = "Copied!";
+        copyBibtexButton.classList.add("is-copied");
+        bibtexCopyStatus.textContent = "BibTeX copied to clipboard.";
+        window.clearTimeout(copyResetTimer);
+        copyResetTimer = window.setTimeout(function () {
+          copyBibtexButton.textContent = "Copy BibTeX";
+          copyBibtexButton.classList.remove("is-copied");
+        }, 2000);
+      }).catch(function () {
+        copyBibtexButton.textContent = "Copy failed";
+        bibtexCopyStatus.textContent = "BibTeX could not be copied.";
+      });
+    });
+
+    var backToTopButton = document.getElementById("back-to-top");
+    var updateBackToTopButton = function () { backToTopButton.classList.toggle("is-visible", window.scrollY > 500); };
+    backToTopButton.addEventListener("click", function () {
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+    window.addEventListener("scroll", updateBackToTopButton, { passive: true });
+    updateBackToTopButton();
+  </script>
+</body>
+
+</html>
