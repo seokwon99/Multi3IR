@@ -1,0 +1,28 @@
+# data, checkpoints, logs, environments — never tracked
+/results
+/envs
+*.pt
+*.npz
+*.npy
+*.safetensors
+*.bin
+*.ckpt
+*.jsonl
+*.parquet
+*.log
+*.png
+*.pdf
+
+# python / editor / local
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.vscode/
+.idea/
+.DS_Store
+.claude/
+CLAUDE.md
+.archive/
+serper_api.txt
+*.env

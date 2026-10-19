@@ -1,0 +1,320 @@
+{
+  "technology": {
+    "android_os": {
+      "site_url": "https://android.stackexchange.com/",
+      "archive_url": null
+    },
+    "arduino": {
+      "site_url": "https://arduino.stackexchange.com/",
+      "archive_url": null
+    },
+    "blender": {
+      "site_url": "https://blender.stackexchange.com/",
+      "archive_url": null
+    },
+    "cryptography": {
+      "site_url": "https://crypto.stackexchange.com/",
+      "archive_url": null
+    },
+    "database_administrator": {
+      "site_url": "https://dba.stackexchange.com/",
+      "archive_url": null
+    },
+    "drupal": {
+      "site_url": "https://drupal.stackexchange.com/",
+      "archive_url": null
+    },
+    "electrical_engineering": {
+      "site_url": "https://electronics.stackexchange.com/",
+      "archive_url": null
+    },
+    "ethereum": {
+      "site_url": "https://ethereum.stackexchange.com/",
+      "archive_url": null
+    },
+    "gamedev": {
+      "site_url": "https://gamedev.stackexchange.com/",
+      "archive_url": null
+    },
+    "geographic_information_systems": {
+      "site_url": "https://gis.stackexchange.com/",
+      "archive_url": null
+    },
+    "information_security": {
+      "site_url": "https://security.stackexchange.com/",
+      "archive_url": null
+    },
+    "latex": {
+      "site_url": "https://tex.stackexchange.com/",
+      "archive_url": null
+    },
+    "linux": {
+      "site_url": "https://unix.stackexchange.com/",
+      "archive_url": null
+    },
+    "magneto": {
+      "site_url": "https://magento.stackexchange.com/",
+      "archive_url": null
+    },
+    "rasberry_pi": {
+      "site_url": "https://raspberrypi.stackexchange.com/",
+      "archive_url": null
+    },
+    "robotics": {
+      "site_url": "https://robotics.stackexchange.com/",
+      "archive_url": null
+    },
+    "salesforce": {
+      "site_url": "https://salesforce.stackexchange.com/",
+      "archive_url": null
+    },
+    "sharepoint": {
+      "site_url": "https://sharepoint.stackexchange.com/",
+      "archive_url": null
+    },
+    "signal_processing": {
+      "site_url": "https://dsp.stackexchange.com/",
+      "archive_url": null
+    },
+    "stackoverflow": {
+      "site_url": "https://stackoverflow.com/",
+      "archive_url": "https://archive.org/download/stackexchange/stackoverflow.com-Posts.7z"
+    },
+    "super_user": {
+      "site_url": "https://superuser.com/",
+      "archive_url": "https://archive.org/download/stackexchange/superuser.com.7z"
+    },
+    "webapplication": {
+      "site_url": "https://webapps.stackexchange.com/",
+      "archive_url": null
+    },
+    "wordpress": {
+      "site_url": "https://wordpress.stackexchange.com/",
+      "archive_url": null
+    },
+    "artifial_intelligence": {
+      "site_url": "https://ai.stackexchange.com/",
+      "archive_url": null
+    },
+    "computer_science": {
+      "site_url": "https://cs.stackexchange.com/",
+      "archive_url": null
+    },
+    "computational_science": {
+      "site_url": "https://scicomp.stackexchange.com/",
+      "archive_url": null
+    },
+    "aviation": {
+      "site_url": "https://aviation.stackexchange.com/",
+      "archive_url": null
+    },
+    "opensource": {
+      "site_url": "https://opensource.stackexchange.com/",
+      "archive_url": null
+    }
+  },
+  "science": {
+    "astronomy": {
+      "site_url": "https://astronomy.stackexchange.com/",
+      "archive_url": null
+    },
+    "bioinformatics": {
+      "site_url": "https://bioinformatics.stackexchange.com/",
+      "archive_url": null
+    },
+    "biology": {
+      "site_url": "https://biology.stackexchange.com/",
+      "archive_url": null
+    },
+    "chemistry": {
+      "site_url": "https://chemistry.stackexchange.com/",
+      "archive_url": null
+    },
+    "earth_science": {
+      "site_url": "https://earthscience.stackexchange.com/",
+      "archive_url": null
+    },
+    "linguistics": {
+      "site_url": "https://linguistics.stackexchange.com/",
+      "archive_url": null
+    },
+    "mathmatics": {
+      "site_url": "https://math.stackexchange.com/",
+      "archive_url": null
+    },
+    "medical_sciences": {
+      "site_url": "https://medicalsciences.stackexchange.com/",
+      "archive_url": null
+    },
+    "philosophy": {
+      "site_url": "https://philosophy.stackexchange.com/",
+      "archive_url": null
+    },
+    "physics": {
+      "site_url": "https://physics.stackexchange.com/",
+      "archive_url": null
+    },
+    "psychology": {
+      "site_url": "https://cogsci.stackexchange.com/",
+      "archive_url": null
+    },
+    "academia": {
+      "site_url": "https://academia.stackexchange.com/",
+      "archive_url": null
+    }
+  },
+  "culture_recreation": {
+    "arqade": {
+      "site_url": "https://gaming.stackexchange.com/",
+      "archive_url": null
+    },
+    "boardgames": {
+      "site_url": "https://boardgames.stackexchange.com/",
+      "archive_url": null
+    },
+    "buddhism": {
+      "site_url": "https://buddhism.stackexchange.com/",
+      "archive_url": null
+    },
+    "chess": {
+      "site_url": "https://chess.stackexchange.com/",
+      "archive_url": null
+    },
+    "chiense_language": {
+      "site_url": "https://chinese.stackexchange.com/",
+      "archive_url": null
+    },
+    "christians": {
+      "site_url": "https://christianity.stackexchange.com/",
+      "archive_url": null
+    },
+    "english_language": {
+      "site_url": "https://english.stackexchange.com/",
+      "archive_url": null
+    },
+    "french_language": {
+      "site_url": "https://french.stackexchange.com/",
+      "archive_url": null
+    },
+    "hinduism": {
+      "site_url": "https://hinduism.stackexchange.com/",
+      "archive_url": null
+    },
+    "islam": {
+      "site_url": "https://islam.stackexchange.com/",
+      "archive_url": null
+    },
+    "motor_vehicles": {
+      "site_url": "https://mechanics.stackexchange.com/",
+      "archive_url": null
+    },
+    "mythology": {
+      "site_url": "https://mythology.stackexchange.com/",
+      "archive_url": null
+    },
+    "politics": {
+      "site_url": "https://politics.stackexchange.com/",
+      "archive_url": null
+    },
+    "puzzle": {
+      "site_url": "https://puzzling.stackexchange.com/",
+      "archive_url": null
+    },
+    "spanish_language": {
+      "site_url": "https://spanish.stackexchange.com/",
+      "archive_url": null
+    },
+    "sports": {
+      "site_url": "https://sports.stackexchange.com/",
+      "archive_url": null
+    },
+    "travel": {
+      "site_url": "https://travel.stackexchange.com/",
+      "archive_url": null
+    },
+    "movies_tv": {
+      "site_url": "https://movies.stackexchange.com/",
+      "archive_url": null
+    },
+    "music": {
+      "site_url": "https://music.stackexchange.com/",
+      "archive_url": null
+    },
+    "photography": {
+      "site_url": "https://photo.stackexchange.com/",
+      "archive_url": null
+    },
+    "science_fiction_fantasy": {
+      "site_url": "https://scifi.stackexchange.com/",
+      "archive_url": null
+    }
+  },
+  "life_arts": {
+    "fitness": {
+      "site_url": "https://fitness.stackexchange.com/",
+      "archive_url": null
+    },
+    "gardening": {
+      "site_url": "https://gardening.stackexchange.com/",
+      "archive_url": null
+    },
+    "genealogy": {
+      "site_url": "https://genealogy.stackexchange.com/",
+      "archive_url": null
+    },
+    "graphic_design": {
+      "site_url": "https://graphicdesign.stackexchange.com/",
+      "archive_url": null
+    },
+    "home_improvement": {
+      "site_url": "https://diy.stackexchange.com/",
+      "archive_url": null
+    },
+    "parenting": {
+      "site_url": "https://parenting.stackexchange.com/",
+      "archive_url": null
+    },
+    "pets": {
+      "site_url": "https://pets.stackexchange.com/",
+      "archive_url": null
+    },
+    "writing": {
+      "site_url": "https://writing.stackexchange.com/",
+      "archive_url": null
+    }
+  },
+  "business": {
+    "patents": {
+      "site_url": "https://patents.stackexchange.com/",
+      "archive_url": null
+    },
+    "project_management": {
+      "site_url": "https://pm.stackexchange.com/",
+      "archive_url": null
+    },
+    "quantitative_finance": {
+      "site_url": "https://quant.stackexchange.com/",
+      "archive_url": null
+    },
+    "economics": {
+      "site_url": "https://economics.stackexchange.com/",
+      "archive_url": null
+    },
+    "personal_finance": {
+      "site_url": "https://money.stackexchange.com/",
+      "archive_url": null
+    },
+    "freelancing": {
+      "site_url": "https://freelancing.stackexchange.com/",
+      "archive_url": null
+    },
+    "workplace": {
+      "site_url": "https://workplace.stackexchange.com/",
+      "archive_url": null
+    },
+    "law": {
+      "site_url": "https://law.stackexchange.com/",
+      "archive_url": null
+    }
+  }
+}

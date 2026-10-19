@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "multi3ir"
+version = "1.0.0"
+description = "Multi3IR: multi-perspective, multi-domain, multi-modal IR — benchmark construction, SPIN training, evaluation"
+readme = "README.md"
+requires-python = ">=3.10"
+# Backbone stacks pin incompatible transformers versions: install one of
+# requirements/{qwen,gme,mmembed}.txt into its own venv, then `pip install -e .` there.
+dependencies = []
+
+[tool.setuptools.packages.find]
+include = ["multi3ir*"]
