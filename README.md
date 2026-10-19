@@ -20,9 +20,7 @@ Information retrieval increasingly targets open-ended queries that admit diverse
 
 **SPIN** (Steering Perspectives by Injecting Noise) is a parameter- and label-efficient method that learns noise vectors to steer a frozen retriever's embeddings toward diverse yet meaningful semantic directions. Existing multimodal retrievers suffer from single-perspective bias; SPIN substantially improves perspective coverage on Multi³IR and generalizes to unseen open-ended IR benchmarks.
 
-<!-- TODO: add assets/overview.png (paper Figure 1)
-<p align="center"><img src="assets/overview.png" width="100%" alt="Multi³IR overview"></p>
--->
+<p align="center"><img src="assets/multi3ir.gif" width="100%" alt="An open-ended query branches into perspectives; each perspective is searched and supported by documents from different domains and modalities."></p>
 
 ## ✨ Highlights
 
