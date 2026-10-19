@@ -100,6 +100,11 @@ def push_card(out: Path):
     n = lambda c, sp: f"{pq.read_metadata(out / c / f'{sp}.parquet').num_rows:,}"
     cfg = "\n".join(f"  - config_name: {c}\n    data_files:\n" + "".join(
         f"      - split: {s}\n        path: {c}/{s}.parquet\n" for s in splits) for c, splits in CONFIGS.items())
+    gif = Path(__file__).resolve().parents[2] / "assets" / "multi3ir.gif"
+    if not gif.exists():
+        raise FileNotFoundError(gif)
+    (out / "assets").mkdir(exist_ok=True)
+    shutil.copy(gif, out / "assets" / gif.name)
     (out / "README.md").write_text(f"""---
 license: cc-by-sa-4.0
 language: [en]
@@ -110,7 +115,9 @@ configs:
 
 # Multi³IR-Bench
 
-Multi-perspective, multi-domain, multi-modal information retrieval benchmark ([paper](https://arxiv.org/abs/2608.30949), [code](https://github.com/seokwon99/Multi3IR)). 104.9K Stack Exchange questions (72K train / 32K validation / 1.0K test) with 521.7K perspective descriptions (4.98 per query) and judged gold documents per perspective, over a 1.01M-document corpus of C4 web text and web images. This release ships the train split (train + validation questions together) and the 1.0K test split.
+<p align="center"><img src="assets/multi3ir.gif" width="100%" alt="An open-ended query branches into perspectives; each perspective is searched and supported by documents from different domains and modalities."></p>
+
+Multi-perspective, multi-domain, multi-modal information retrieval benchmark ([paper](https://arxiv.org/abs/2608.30949), [code](https://github.com/seokwon99/Multi3IR), [project page](https://seokwon99.github.io/Multi3IR/)). 104.9K Stack Exchange questions (72K train / 32K validation / 1.0K test) with 521.7K perspective descriptions (4.98 per query) and judged gold documents per perspective, over a 1.01M-document corpus of C4 web text and web images. This release ships the train split (train + validation questions together) and the 1.0K test split.
 
 | config | split | rows | columns |
 |---|---|---|---|

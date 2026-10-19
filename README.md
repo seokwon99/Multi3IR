@@ -3,6 +3,7 @@
 <p align="center">
   <a href="https://arxiv.org/abs/2608.30949"><img src="https://img.shields.io/badge/arXiv-2608.30949-b31b1b.svg" alt="arXiv"></a>
   <a href="https://arxiv.org/abs/2608.30949"><img src="https://img.shields.io/badge/EMNLP-2026-blue.svg" alt="EMNLP 2026"></a>
+  <a href="https://seokwon99.github.io/Multi3IR/"><img src="https://img.shields.io/badge/Project-Page-3b5bdb.svg" alt="Project Page"></a>
   <a href="https://huggingface.co/datasets/seokwon99/Multi3IR"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Multi%C2%B3IR--Bench-FFD21E" alt="Multi³IR-Bench on Hugging Face"></a>
 </p>
 
